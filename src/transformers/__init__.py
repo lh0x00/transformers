@@ -4990,6 +4990,7 @@ if TYPE_CHECKING:
         IdeficsConfig,
     )
     from .models.idefics2 import Idefics2Config
+    from .models.aries import AriesConfig
     from .models.imagegpt import ImageGPTConfig
     from .models.informer import InformerConfig
     from .models.instructblip import (
@@ -5715,6 +5716,7 @@ if TYPE_CHECKING:
         from .models.grounding_dino import GroundingDinoImageProcessor
         from .models.idefics import IdeficsImageProcessor
         from .models.idefics2 import Idefics2ImageProcessor
+        from .models.aries import AriesImageProcessor
         from .models.imagegpt import ImageGPTFeatureExtractor, ImageGPTImageProcessor
         from .models.layoutlmv2 import (
             LayoutLMv2FeatureExtractor,
@@ -6598,6 +6600,12 @@ if TYPE_CHECKING:
             Idefics2Model,
             Idefics2PreTrainedModel,
             Idefics2Processor,
+        )
+        from .models.aries import (
+            AriesForConditionalGeneration,
+            AriesModel,
+            AriesPreTrainedModel,
+            AriesProcessor,
         )
         from .models.imagegpt import (
             ImageGPTForCausalImageModeling,
