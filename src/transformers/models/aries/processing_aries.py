@@ -54,7 +54,7 @@ class AriesProcessor(ProcessorMixin):
         tokenizer (`PreTrainedTokenizerBase`, *optional*):
             An instance of [`PreTrainedTokenizerBase`]. This should correspond with the model's text model. The tokenizer is a required input.
         image_seq_len (`int`, *optional*, defaults to 64):
-            The length of the image sequence i.e. the number of <image> tokens per image in the input.
+            The length of the image sequence i.e. the number of <|content:image|> tokens per image in the input.
             This parameter is used to build the string from the input prompt and image tokens and should match the
             config.perceiver_config.resampler_n_latents value for the model used.
     """
@@ -71,7 +71,7 @@ class AriesProcessor(ProcessorMixin):
 
         # NOTE: The model will not add a new set of words but will reuse Phi3's existing set of placeholder words.
         # self.fake_image_token = AddedToken("<fake_token_around_image>", normalized=False, special=True)
-        # self.image_token = AddedToken("<image>", normalized=False, special=True)
+        # self.image_token = AddedToken("<|content:image|>", normalized=False, special=True)
         # self.end_of_utterance_token = AddedToken("<end_of_utterance>", normalized=False, special=True)
         # tokens_to_add = {
         #     "additional_special_tokens": [self.fake_image_token, self.image_token, self.end_of_utterance_token]
@@ -129,14 +129,14 @@ class AriesProcessor(ProcessorMixin):
         >>> images = [[image1], [image2]]
 
         >>> text = [
-        ...     "<image>In this image, we see",
-        ...     "bla bla bla<image>",
+        ...     "<|content:image|>In this image, we see",
+        ...     "bla bla bla<|content:image|>",
         ... ]
         >>> outputs = processor(text=text, images=images, return_tensors="pt", padding=True)
         >>> input_ids = outputs.input_ids
         >>> input_tokens = processor.tokenizer.batch_decode(input_ids)
         >>> print(input_tokens)
-        ['<s><fake_token_around_image><image><image><fake_token_around_image> In this image, we see', '<s> bla bla bla<fake_token_around_image><image><image><fake_token_around_image>']
+        ['<s><fake_token_around_image><|content:image|><|content:image|><fake_token_around_image> In this image, we see', '<s> bla bla bla<fake_token_around_image><|content:image|><|content:image|><fake_token_around_image>']
         ```
 
         Args:
@@ -145,8 +145,8 @@ class AriesProcessor(ProcessorMixin):
                 (pretokenized string). If the sequences are provided as list of strings (pretokenized), you must set
                 `is_split_into_words=True` (to lift the ambiguity with a batch of sequences).
 
-                Wherever an image token, `<image>` is encountered it is expanded to
-                `<fake_token_around_image>` + `<image>` * `image_seq_len` * <fake_token_around_image>`.
+                Wherever an image token, `<|content:image|>` is encountered it is expanded to
+                `<fake_token_around_image>` + `<|content:image|>` * `image_seq_len` * <fake_token_around_image>`.
             images (`PIL.Image.Image`, `np.ndarray`, `torch.Tensor`, `List[PIL.Image.Image]`, `List[np.ndarray]`, `List[torch.Tensor]`, *optional*):
                 The image or batch of images to be prepared. Each image can be a PIL image, NumPy array or PyTorch
                 tensor. If is of type `List[ImageInput]`, it's assumed that this is for a single prompt i.e. of batch size 1.
@@ -266,7 +266,7 @@ class AriesProcessor(ProcessorMixin):
         if no chat template is provided.
 
         By default, the output isn't tokenized. This is because the ARIES chat template is designed to insert
-        the image token <image> into the sequence according to the message, but does not handle expanding the image
+        the image token <|content:image|> into the sequence according to the message, but does not handle expanding the image
         tokens to the sequence length or adding the surrounding tokens e.g. <fake_image_token>.
 
         Args:
@@ -303,7 +303,7 @@ class AriesProcessor(ProcessorMixin):
         This template formats inputs in the form of a chat history. For each message in the chat history:
         * the template will output the role of the speaker followed by the content of the message.
         * content can be a single string or a list of strings and images.
-        * If the content element is an image, the template will output a sequence of <image> tokens and <fake_token_around_image> token before and after each image
+        * If the content element is an image, the template will output a sequence of <|content:image|> tokens and <fake_token_around_image> token before and after each image
         * The template will output an <end_of_utterance> token at the end of each message.
 
         Example:
@@ -325,7 +325,7 @@ class AriesProcessor(ProcessorMixin):
 
         Will create outputs like:
         ```
-        User: What is in this Image?<image><image><end_of_utterance>
+        User: What is in this Image?<|content:image|><|content:image|><end_of_utterance>
         Assistant: This picture depicts Idefix, the dog of Obelix in Asterix and Obelix. Idefix is running on the ground.<end_of_utterance>
         ```
         """
@@ -342,7 +342,7 @@ class AriesProcessor(ProcessorMixin):
                     "{% if line['type'] == 'text' %}"
                         "{{line['text']}}"
                     "{% elif line['type'] == 'image' %}"
-                        "{{ '<image>' }}"
+                        "{{ '<|content:image|>' }}"
                     "{% endif %}"
                 "{% endfor %}"
                 "<end_of_utterance>\n"

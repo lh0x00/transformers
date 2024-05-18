@@ -189,7 +189,7 @@ class AriesConfig(PretrainedConfig):
     Args:
         use_cache (`bool`, *optional*, defaults to `True`):
             Whether or not the model should cache the key/value pairs of the attention mechanism.
-        image_token_id (`int`, *optional*, defaults to 32001):
+        image_token_id (`int`, *optional*, defaults to 32002):
             The id of the "image" token.
         tie_word_embeddings (`bool`, *optional*, defaults to `False`):
             Whether or not to tie the word embeddings with the token embeddings.

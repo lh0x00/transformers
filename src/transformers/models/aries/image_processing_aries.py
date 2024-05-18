@@ -200,11 +200,11 @@ class AriesImageProcessor(BaseImageProcessor):
         do_normalize (`bool`, *optional*, defaults to `True`):
             Whether to normalize the image. If set to `True`, the image is normalized to have a mean of `image_mean` and
             a standard deviation of `image_std`.
-        image_mean (`float` or `List[float]`, *optional*, defaults to `IDEFICS_STANDARD_MEAN`):
+        image_mean (`float` or `List[float]`, *optional*, defaults to `ARIES_STANDARD_MEAN`):
             Mean to use if normalizing the image. This is a float or list of floats the length of the number of
             channels in the image. Can be overridden by the `image_mean` parameter in the `preprocess` method. Can be
             overridden by the `image_mean` parameter in the `preprocess` method.
-        image_std (`float` or `List[float]`, *optional*, defaults to `IDEFICS_STANDARD_STD`):
+        image_std (`float` or `List[float]`, *optional*, defaults to `ARIES_STANDARD_STD`):
             Standard deviation to use if normalizing the image. This is a float or list of floats the length of the
             number of channels in the image. Can be overridden by the `image_std` parameter in the `preprocess` method.
             Can be overridden by the `image_std` parameter in the `preprocess` method.

@@ -528,7 +528,7 @@ class AriesVisionFlashAttention2(AriesVisionAttention):
         )
 
 
-IDEFICS_VISION_ATTENTION_CLASSES = {
+ARIES_VISION_ATTENTION_CLASSES = {
     "eager": AriesVisionAttention,
     "flash_attention_2": AriesVisionFlashAttention2,
 }
@@ -605,7 +605,7 @@ class AriesEncoderLayer(nn.Module):
     def __init__(self, config: AriesConfig):
         super().__init__()
         self.embed_dim = config.hidden_size
-        self.self_attn = IDEFICS_VISION_ATTENTION_CLASSES[config._attn_implementation](
+        self.self_attn = ARIES_VISION_ATTENTION_CLASSES[config._attn_implementation](
             config
         )
         self.layer_norm1 = nn.LayerNorm(self.embed_dim, eps=config.layer_norm_eps)
@@ -1641,9 +1641,9 @@ class AriesPerceiverLayer(nn.Module):
 
         self.input_latents_norm = AriesRMSNorm(self.hidden_size, eps=self.rms_norm_eps)
         self.input_context_norm = AriesRMSNorm(self.hidden_size, eps=self.rms_norm_eps)
-        self.self_attn = ARIES_PERCEIVER_ATTENTION_CLASSES[
-            config._attn_implementation
-        ](config, layer_idx=layer_idx)
+        self.self_attn = ARIES_PERCEIVER_ATTENTION_CLASSES[config._attn_implementation](
+            config, layer_idx=layer_idx
+        )
         self.post_attention_layernorm = AriesRMSNorm(
             self.hidden_size, eps=self.rms_norm_eps
         )
@@ -2024,7 +2024,7 @@ class AriesModel(AriesPreTrainedModel):
         """
         This method aims at merging the token embeddings with the image hidden states into one single sequence of vectors that are fed to the transformer LM.
         The merging happens as follows:
-        - The text token sequence is: `tok_1 tok_2 tok_3 <fake_token_around_image> <image> <image> ... <image> <fake_token_around_image> tok_4`.
+        - The text token sequence is: `tok_1 tok_2 tok_3 <fake_token_around_image> <|content:image|> <|content:image|> ... <|content:image|> <fake_token_around_image> tok_4`.
         - We get the image hidden states for the image through the vision encoder (and potentially the perceiver), and that hidden state is then projected into the text embedding space.
         We thus have a sequence of image hidden states of size (1, image_seq_len, hidden_dim), where 1 is for batch_size of 1 image and hidden_dim is the hidden_dim of the LM transformer.
         - The merging happens so that we obtain the following sequence: `vector_tok_1 vector_tok_2 vector_tok_3 vector_fake_tok_around_image {sequence of image_seq_len image hidden states} vector_fake_toke_around_image vector_tok_4`. That sequence is fed to the LM.
@@ -2340,13 +2340,13 @@ class AriesForConditionalGeneration(AriesPreTrainedModel):
         >>> processor = AutoProcessor.from_pretrained("HuggingFaceM4/aries-8b-base")
         >>> model = AutoModelForVision2Seq.from_pretrained("HuggingFaceM4/aries-8b-base", device_map="auto")
 
-        >>> BAD_WORDS_IDS = processor.tokenizer(["<image>", "<fake_token_around_image>"], add_special_tokens=False).input_ids
+        >>> BAD_WORDS_IDS = processor.tokenizer(["<|content:image|>", "<fake_token_around_image>"], add_special_tokens=False).input_ids
         >>> EOS_WORDS_IDS = [processor.tokenizer.eos_token_id]
 
         >>> # Create inputs
         >>> prompts = [
-        ...   "<image>In this image, we can see the city of New York, and more specifically the Statue of Liberty.<image>In this image,",
-        ...   "In which city is that bridge located?<image>",
+        ...   "<|content:image|>In this image, we can see the city of New York, and more specifically the Statue of Liberty.<|content:image|>In this image,",
+        ...   "In which city is that bridge located?<|content:image|>",
         ... ]
         >>> images = [[image1, image2], [image3]]
         >>> inputs = processor(text=prompts, padding=True, return_tensors="pt").to("cuda")
