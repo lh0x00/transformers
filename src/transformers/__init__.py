@@ -439,6 +439,7 @@ _import_structure = {
     "models.ibert": ["IBertConfig"],
     "models.idefics": ["IdeficsConfig"],
     "models.idefics2": ["Idefics2Config"],
+    "models.aries": ["AriesConfig"],
     "models.imagegpt": ["ImageGPTConfig"],
     "models.informer": ["InformerConfig"],
     "models.instructblip": [
@@ -1134,6 +1135,7 @@ else:
     _import_structure["models.grounding_dino"].extend(["GroundingDinoImageProcessor"])
     _import_structure["models.idefics"].extend(["IdeficsImageProcessor"])
     _import_structure["models.idefics2"].extend(["Idefics2ImageProcessor"])
+    _import_structure["models.aries"].extend(["AriesImageProcessor"])
     _import_structure["models.imagegpt"].extend(["ImageGPTFeatureExtractor", "ImageGPTImageProcessor"])
     _import_structure["models.layoutlmv2"].extend(["LayoutLMv2FeatureExtractor", "LayoutLMv2ImageProcessor"])
     _import_structure["models.layoutlmv3"].extend(["LayoutLMv3FeatureExtractor", "LayoutLMv3ImageProcessor"])
@@ -2172,6 +2174,14 @@ else:
             "Idefics2Model",
             "Idefics2PreTrainedModel",
             "Idefics2Processor",
+        ]
+    )
+    _import_structure["models.aries"].extend(
+        [
+            "AriesForConditionalGeneration",
+            "AriesModel",
+            "AriesPreTrainedModel",
+            "AriesProcessor",
         ]
     )
     _import_structure["models.imagegpt"].extend(
