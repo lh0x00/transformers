@@ -34,6 +34,7 @@ CONFIG_MAPPING_NAMES = OrderedDict(
         ("albert", "AlbertConfig"),
         ("align", "AlignConfig"),
         ("altclip", "AltCLIPConfig"),
+        ("aries", "AriesConfig"),
         ("audio-spectrogram-transformer", "ASTConfig"),
         ("autoformer", "AutoformerConfig"),
         ("bark", "BarkConfig"),
