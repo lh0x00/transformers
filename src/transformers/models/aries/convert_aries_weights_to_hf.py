@@ -27,13 +27,6 @@ from transformers import (
     Phi3Config,
 )
 
-from aries import (
-    AriesConfig,
-    AriesForConditionalGeneration,
-    AriesImageProcessor,
-    AriesProcessor,
-)
-
 aries_model_directory = os.getenv("ARIES_MODEL_DIRECTORY")
 print("ARIES_MODEL_DIRECTORY:", aries_model_directory)
 if aries_model_directory is not None:
@@ -41,6 +34,14 @@ if aries_model_directory is not None:
         0,
         os.getenv("ARIES_MODEL_DIRECTORY"),
     )
+
+from aries import (
+    AriesConfig,
+    AriesForConditionalGeneration,
+    AriesImageProcessor,
+    AriesProcessor,
+)
+
 
 EPILOG_TXT = """Example:
     python transformers/src/transformers/models/aries/convert_aries_weights_to_hf.py --original_model_id HuggingFaceM4/aries-8b --output_hub_path org/aries
