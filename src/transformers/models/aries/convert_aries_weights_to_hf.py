@@ -26,7 +26,7 @@ from transformers import (
     AriesForConditionalGeneration,
     AriesImageProcessor,
     AriesProcessor,
-    MistralConfig,
+    Phi3Config,
 )
 
 
@@ -90,28 +90,10 @@ def merge_weights(state_dict):
 
 
 def get_config(checkpoint):
-    if checkpoint == "HuggingFaceM4/aries":
+    if checkpoint == "lamhieu/aries-4b":
         # We load the config then recreate to use the text_config
         config = AutoConfig.from_pretrained(checkpoint)
-        text_config = MistralConfig(
-            vocab_size=config.vocab_size + config.additional_vocab_size,
-            hidden_size=config.hidden_size,
-            intermediate_size=config.intermediate_size,
-            num_hidden_layers=config.num_hidden_layers,
-            num_attention_heads=config.num_attention_heads,
-            num_key_value_heads=config.num_key_value_heads,
-            hidden_act=config.hidden_act,
-            max_position_embeddings=config.max_position_embeddings,
-            initializer_range=config.initializer_range,
-            rms_norm_eps=config.rms_norm_eps,
-            tie_word_embeddings=config.tie_word_embeddings,
-            rope_theta=config.rope_theta,
-            sliding_window=config.sliding_window,
-            attention_dropout=config.attention_dropout,
-            pad_token_id=config.pad_token_id,
-            bos_token_id=config.bos_token_id,
-            eos_token_id=config.eos_token_id,
-        )
+        text_config = Phi3Config(**config["text_config"])
         perceiver_config = config.perceiver_config.to_dict()
         config = AriesConfig(
             text_config=text_config.to_dict(),

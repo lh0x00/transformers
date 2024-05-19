@@ -245,14 +245,13 @@ class AriesConfig(PretrainedConfig):
             self.vision_config = vision_config
 
         if isinstance(text_config, dict):
-            text_config["model_type"] = text_config["model_type"] if "model_type" in text_config else "mistral"
+            text_config["model_type"] = text_config["model_type"] if "model_type" in text_config else "phi3"
             text_config = CONFIG_MAPPING[text_config["model_type"]](**text_config)
         elif text_config is None:
             logger.info("text_config is None, using default text config")
             text_config = CONFIG_MAPPING["phi3"](
                 max_position_embeddings=131072,
                 rms_norm_eps=1e-5,
-                # None in the original configuration_mistral, we set it to the unk_token_id
                 pad_token_id=32000,
                 tie_word_embeddings=False,
             )
