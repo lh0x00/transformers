@@ -27,10 +27,10 @@ from transformers import (
     Phi3Config,
 )
 
-from .configuration_aries import AriesConfig
-from .modeling_aries import AriesForConditionalGeneration
-from .image_processing_aries import AriesImageProcessor
-from .processing_aries import AriesProcessor
+from aries.configuration_aries import AriesConfig
+from aries.modeling_aries import AriesForConditionalGeneration
+from aries.image_processing_aries import AriesImageProcessor
+from aries.processing_aries import AriesProcessor
 
 aries_model_directory = os.getenv('ARIES_MODEL_DIRECTORY')
 if aries_model_directory is not None:
