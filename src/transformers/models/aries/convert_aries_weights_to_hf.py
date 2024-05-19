@@ -14,6 +14,7 @@
 
 import argparse
 import copy
+import sys
 
 import torch
 from accelerate import init_empty_weights
@@ -29,6 +30,11 @@ from .configuration_aries import AriesConfig
 from .modeling_aries import AriesForConditionalGeneration
 from .image_processing_aries import AriesImageProcessor
 from .processing_aries import AriesProcessor
+
+sys.path.insert(
+    0,
+    "/transformers/src/transformers/models/aries",
+)
 
 EPILOG_TXT = """Example:
     python transformers/src/transformers/models/aries/convert_aries_weights_to_hf.py --original_model_id HuggingFaceM4/aries-8b --output_hub_path org/aries
