@@ -22,13 +22,15 @@ from transformers import (
     AutoConfig,
     AutoModelForCausalLM,
     AutoTokenizer,
+    Phi3Config,
+)
+
+from . import (
     AriesConfig,
     AriesForConditionalGeneration,
     AriesImageProcessor,
     AriesProcessor,
-    Phi3Config,
 )
-
 
 EPILOG_TXT = """Example:
     python transformers/src/transformers/models/aries/convert_aries_weights_to_hf.py --original_model_id HuggingFaceM4/aries-8b --output_hub_path org/aries
